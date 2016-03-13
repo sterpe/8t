@@ -5,4 +5,4 @@ var clear = require('cli-clear')
 var eighty = require('../')
 
 clear()
-process.stdout.write(eighty)
+console.log(eighty)
