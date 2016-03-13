@@ -1,6 +1,6 @@
 {
   "name": "8t",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "bin": {
     "8t": "bin/cmd.js"
   },
