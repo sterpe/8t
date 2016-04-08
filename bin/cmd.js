@@ -16,7 +16,7 @@ if (!win) {
   stdout.push('\x1B[2J')
 } else {
   lines = process.stdout.getWindowSize()[1]
-  for(; i < lines; i++) {
+  for (; i < lines; i++) {
     stdout.push(crlf)
   }
 }

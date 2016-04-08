@@ -5,7 +5,7 @@ var e = 'Tab-size too small'
 function writeTicks (tab, columns) {
   var j = Math.floor(columns / tab)
   var i = 1
-  var s = ""
+  var s = ''
   var col
   var spaces
 
@@ -17,9 +17,9 @@ function writeTicks (tab, columns) {
       throw new Error(e)
     }
     while (spaces--) {
-      s += " "
+      s += ' '
     }
-    s += "+"
+    s += '+'
     s += col.toString()
   }
   return s

@@ -1,25 +1,20 @@
 PATH := node_modules/.bin:$(PATH)
-NPM=.node_modules/.bin/npm
+NPM=npm
 NODE_VERSION=$(shell node --version 2>/dev/null)
 NVMRC=$(shell cat .nvmrc)
-SOURCE_DIR=src
-DIST_DIR=dist
 TEST_REPORTS_DIR=test-reports
 COVERAGE_REPORTS_DIR=coverage
-CODE_REPORTS_DIR=plato
 ROOT = index.js
-SOURCES = $(ROOT) `find $(SOURCE_DIR)`
+BIN_DIR = bin
+SOURCES = $(ROOT) `find $(BIN_DIR)`
 SCRIPTS = `find scripts -name "*.js"`
 TESTS = `find __tests__ -name "*.js"`
-MOCKS = `find __mocks__ -name "*.js"`
 JESTRC = .jestrc
 JEST_FLAGS =
 DEVELOPMENT=development
-PRODUCTION=production
 
 LINT = standard
 TEST = jest -c $(JESTRC) $(JEST_FLAGS)
-BABEL = babel $(ROOT) -d $(DIST_DIR)
 
 define postinstall-message
 @echo ""
@@ -36,7 +31,7 @@ define postinstall-message
 @echo ""
 endef
 
-all: i test clean build
+all: i test clean
 	$(postinstall-message)
 
 configure:
@@ -50,57 +45,36 @@ $(info )
 $(error No or wrong node version.  Found "$(NODE_VERSION)", please install node $(NVMRC))
 endif
 
-.npm : | configure
-	@echo "| Bootstrapping my \`npm\` with your \`npm\`.";
-	@npm i npm@3;
-	@echo "| Moving the \`node_modules\` folder out of the way.";
-	@mv node_modules .node_modules;
-	@echo "| Clearing the local \`npm\` cache.";
-	@.node_modules/.bin/npm cache clear;
-	@echo "| Installing \`npm\` locally.";
-	@.node_modules/.bin/npm i npm@3;
-	@rm -rf .node_modules;
-	@mv node_modules .node_modules;
-	@echo "| Success!  I will now install the project dependencies.";
 
-i: .npm
+i: | configure
 ifeq "$(NODE_ENVIRONMENT)" "$(DEVELOPMENT)"
-	$(NPM) link;
+	@$(NPM) link;
 else
-	$(NPM) i;
+	@$(NPM) i;
 endif
 	$(postinstall-message)
 
-build:
-
 test: lint
-	rm -rf $(TEST_REPORTS_DIR);
-	mkdir -p $(TEST_REPORTS_DIR);
-	JEST_JUNIT_REPORTS_DIR=$(TEST_REPORTS_DIR) $(TEST);
+	@rm -rf $(TEST_REPORTS_DIR);
+	@mkdir -p $(TEST_REPORTS_DIR);
+	@JEST_JUNIT_REPORTS_DIR=$(TEST_REPORTS_DIR) $(TEST);
 
 lint:
-	$(LINT) $(SOURCES) $(TESTS) $(MOCKS) $(SCRIPTS);
+	@$(LINT) $(SOURCES) $(TESTS) $(SCRIPTS);
 
 .clean: clean
-	rm -rf .npm;
-	rm -rf .node_modules;
-	rm -rf node_modules;
+	@rm -rf node_modules;
 
 clean:
-	rm -rf $(DIST_DIR) \
+	@rm -rf $(DIST_DIR) \
 	$(TEST_REPORTS_DIR) \
 	$(COVERAGE_REPORTS_DIR) \
 	$(CODE_REPORTS_DIR);
 
-watch:
-
 .PHONY : all \
-	babel \
-	build \
 	configure \
 	.clean \
 	clean \
 	i \
 	lint \
-	test \
-	watch
+	test

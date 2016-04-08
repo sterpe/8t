@@ -1,6 +1,7 @@
 # 8t
 
-Clears the screen and renders a demarcated 80 column guide in your terminal window.
+Clears the terminal screen and renders a
+demarcated 80 column guide in the term window.
 
 ![8t.png](8t.png)
 
